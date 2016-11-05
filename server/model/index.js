@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 
 const { DBHOST, DBPORT, DB } = process.env;
 
-const db = DB||'test';
+const db = DB||'bookmark';
 const dbPort = DBPORT||'27017';
 const dbHost = DBHOST||'localhost';
 
@@ -60,6 +60,7 @@ export default class Model {
     return new Promise((resolve, reject) => {
       this.client.connect(this.DBURL)
       .then((db) => {
+        console.log(typeof query._id);
         db.collection(this.collection)
         .updateOne(query,{
           $set: data,
