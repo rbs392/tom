@@ -16,17 +16,26 @@ export default class Home extends Component {
     }
     this.items = [];
     this.search = this.search.bind(this);
+    this.addItem = this.addItem.bind(this);
+    this.initItems = this.initItems.bind(this);
+    this.initFolders = this.initFolders.bind(this);
   }
 
-  updateItems(items, folders) {
+  initItems(items) {
     this.items = items;
-    this.setState({ items, folders })
+    this.setState({ items })
+  }
+
+  initFolders(folders) {
+    this.folders = folders;
+    this.setState({ folders })
   }
 
   componentDidMount() {
-    Service.get()
-    .then(data =>
-      this.updateItems(data.items, data.folders));
+    Service.getItems()
+    .then(this.initItems);
+    Service.getFolders()
+    .then(this.initFolders);
   }
 
   search(text) {
@@ -34,8 +43,14 @@ export default class Home extends Component {
     this.setState({ items: newItems })
   }
 
-  addItem() {
-    console.log("add item");
+  addItem(item, callback) {
+    Service.add(item)
+    .then((data) => {
+      console.log(data)
+      Service.getItems()
+      .then(this.initItems);
+      callback(data);
+    });
   }
 
   render() {
@@ -46,6 +61,7 @@ export default class Home extends Component {
           <SearchOrAdd
             onChange={this.search}
             onEnter={this.addItem}
+            folders={this.state.folders}
           />
         </div>
         <div className="row">

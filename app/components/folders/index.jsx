@@ -11,15 +11,19 @@ export default class Folders extends Component {
           <h6> Folders </h6>
           <hr />
           <ul className="list-group">
+            <Folder key="public" name="public">
+              <i className="fa fa-folder-o" />
+              <label>Public</label>
+            </Folder>
             {
               this.props.items.map((folder, id) =>
-                <Folder key={id}>
+                <Folder key={id} name={folder}>
                   <i className="fa fa-folder-o" />
-                  <label>folder</label>
+                  <label>{folder}</label>
                 </Folder>
               )
             }
-            <Folder key="trash">
+            <Folder key="trash" name="trash">
               <i className="fa fa-trash-o" />
               <label>Trash</label>
             </Folder>

@@ -5,10 +5,17 @@ export default class SearchOrAdd extends Component {
   constructor(props) {
     super(props);
     this.onSave = this.onSave.bind(this);
+    this.setUrl = this.setUrl.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
-    this.state = { text: '', showAddControl: false };
+    this.setFolder = this.setFolder.bind(this);
+    this.state = {
+      title: '',
+      url: '',
+      folder: 'public',
+      showAddControl: false,
+    };
   }
   onKeyDown(event) {
     if(event.keyCode === 13){
@@ -18,8 +25,14 @@ export default class SearchOrAdd extends Component {
 
   onSave() {
     this.setState({ saving: true }, () => {
-      this.props.onEnter(this.state.text, ()=>{
-        this.setState({ showAddControl: false, saving: false });
+      const { title, url, folder } = this.state;
+      this.props.onEnter({ title, url, folder }, ()=>{
+        this.setState({
+          title: '',
+          url: '',
+          folder: 'public',
+          showAddControl: false,
+        });
       });
     });
   }
@@ -29,20 +42,31 @@ export default class SearchOrAdd extends Component {
   }
 
   onChange(event) {
-    const text = event.target.value;
-    this.setState({ text });
-    this.props.onChange(text);
+    const title = event.target.value;
+    this.setState({ title });
+    this.props.onChange(title);
+  }
+
+  setFolder(folder) {
+    this.setState({ folder });
+  }
+
+  setUrl(event) {
+    const url = event.target.value;
+    this.setState({ url });
   }
 
   render() {
+    const folders = this.props.folders.slice();
+    folders.unshift('public');
     return (
       <div className="component-searchoradd clearfix">
         <div className="col-sm-12 form-group">
           <input
             type="text"
-            value={this.state.text}
+            value={this.state.title}
             className="form-control"
-            placeholder="Search you bookmarks if not add them"
+            placeholder="Search you bookmarks if not press enter to add."
             onChange={this.onChange}
             onKeyDown={this.onKeyDown}
           />
@@ -53,24 +77,27 @@ export default class SearchOrAdd extends Component {
               <div className="form-group input-group">
                 <input
                   type="text"
-                  value={this.state.title}
+                  value={this.state.url}
+                  placeholder="Enter a url."
                   className="form-control"
-                  placeholder="Title"
+                  onChange={this.setUrl}
                 />
                 <span className="input-group-btn dropdown">
                   <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Public
+                    {this.state.folder}
                   </button>
                   <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a className="dropdown-item" href="#">Action</a>
-                    <a className="dropdown-item" href="#">Another action</a>
-                    <a className="dropdown-item" href="#">Something else here</a>
+                    {
+                      folders.map((folder, i) =>
+                        <a key={i} className="dropdown-item" onClick={this.setFolder.bind(null, folder)}>{folder}</a>
+                      )
+                    }
                   </div>
                 </span>
               </div>
               <div className="form-group text-sm-right">
                 <div className="btn-group">
-                  <button type="button" className="btn btn-secondary">Save</button>
+                  <button type="button" className="btn btn-secondary" onClick={this.onSave}>Save</button>
                   <button type="button" className="btn btn-secondary" onClick={this.onCancel}>Cancel</button>
                 </div>
               </div>

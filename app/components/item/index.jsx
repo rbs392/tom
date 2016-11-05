@@ -2,10 +2,20 @@ import React, { Component } from 'react';
 import { DragSource } from 'react-dnd';
 
 import './style.scss';
+import Service from '../../service';
 
 const spec = {
-  beginDrag() {
-    return {}
+  beginDrag(props) {
+    const { title, url, folder } = props;
+    return { title, url, folder };
+  },
+
+  endDrag(props, monitor) {
+    const newFolder = monitor.getDropResult();
+    if(newFolder){
+      const { title, url, folder } = Object.assign({}, props, newFolder);
+      Service.update(props._id, { title, url, folder });
+    }
   }
 }
 
