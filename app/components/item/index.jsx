@@ -29,8 +29,8 @@ export default class Item extends Component {
   render() {
     const { connectDragSource, isDragging } = this.props;
     return connectDragSource(
-      <div className="component-item" style={{ background: isDragging ? 'yellow': 'white'}}>
-        <a href={this.props.url}>{this.props.title}</a>
+      <div className="component-item" style={{ background: isDragging ? 'rgba(85, 179, 62, 0.35)': 'white'}}>
+        <a target="__blank" href={this.props.url}>{this.props.title}</a>
       </div>
     );
   }

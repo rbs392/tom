@@ -24,7 +24,12 @@ export default class Folder extends Component {
     const isOverBg =   (isOver) ? 'rgba(0,255,0, 0.2)': 'white';
     const background = (isOver && !canDrop) ? 'rgba(0,0,0, 0.2)' : isOverBg;
     return connectDropTarget(
-      <li key={this.props.key} className="list-group-item" style={{ background }} >
+      <li
+        key={this.props.key}
+        className={`list-group-item ${this.props.className}`}
+        style={{ background }}
+        onClick={this.props.onClick}
+      >
         {this.props.children}
       </li>
     );

@@ -13,12 +13,14 @@ export default class Home extends Component {
     this.state = {
       items: [],
       folders: [],
+      activeFolder: 'public',
     }
     this.items = [];
     this.search = this.search.bind(this);
     this.addItem = this.addItem.bind(this);
     this.initItems = this.initItems.bind(this);
     this.initFolders = this.initFolders.bind(this);
+    this.selectFolder = this.selectFolder.bind(this);
   }
 
   initItems(items) {
@@ -39,17 +41,22 @@ export default class Home extends Component {
   }
 
   search(text) {
-    const newItems = this.items.filter(item=>RegExp(text).test(item.title));
+    const newItems = this.items.filter(item=>RegExp(text, 'i').test(item.title));
+    this.setState({ items: newItems })
+  }
+
+  selectFolder(activeFolder) {
+    this.setState({ activeFolder });
+    const newItems = this.items.filter(item=>(item.folder===activeFolder));
     this.setState({ items: newItems })
   }
 
   addItem(item, callback) {
     Service.add(item)
     .then((data) => {
-      console.log(data)
       Service.getItems()
       .then(this.initItems);
-      callback(data);
+      callback();
     });
   }
 
@@ -68,13 +75,12 @@ export default class Home extends Component {
           <div className="col-md-3">
             <Folders
               items={this.state.folders}
+              onClick={this.selectFolder}
+              activeFolder={this.state.activeFolder}
             />
           </div>
           <div className="col-md-9">
-            <Bookmarks
-              items={this.state.items}
-              currentFolder={this.state.currentFolder}
-            />
+            <Bookmarks items={this.state.items} />
           </div>
         </div>
       </div>
