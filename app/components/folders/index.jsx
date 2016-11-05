@@ -11,6 +11,15 @@ export default class Folders extends Component {
           <h6> Folders </h6>
           <hr />
           <ul className="list-group">
+            <Folder
+              key="All"
+              name="All"
+              onClick={this.props.onClick.bind(null, "All")}
+              className={`${(this.props.activeFolder === "All") ? 'active-folder' : ''}`}
+            >
+              <i className="fa fa-folder-o" />
+              <label>All</label>
+            </Folder>
             {
               this.props.items.map((folder, id) =>
                 <Folder
@@ -24,6 +33,15 @@ export default class Folders extends Component {
                 </Folder>
               )
             }
+            <li key="add-new" className="list-group-item">
+              <span>
+                <i className="fa fa-plus" />
+                <label>Add new Folder</label>
+              </span>
+              <span>
+                <input type="text" placeholder="Enter folder name" className="form-control"/>
+              </span>
+            </li>
           </ul>
         </div>
       </div>

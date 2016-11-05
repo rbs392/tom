@@ -13,19 +13,20 @@ export default class Home extends Component {
     this.state = {
       items: [],
       folders: [],
-      activeFolder: 'public',
+      activeFolder: 'All',
     }
     this.items = [];
     this.search = this.search.bind(this);
     this.addItem = this.addItem.bind(this);
+    this.moveItem = this.moveItem.bind(this);
     this.initItems = this.initItems.bind(this);
     this.initFolders = this.initFolders.bind(this);
     this.selectFolder = this.selectFolder.bind(this);
   }
 
-  initItems(items) {
+  initItems(items, activeFolder=null) {
     this.items = items;
-    this.setState({ items })
+    this.selectFolder((activeFolder || this.state.activeFolder));
   }
 
   initFolders(folders) {
@@ -42,11 +43,14 @@ export default class Home extends Component {
 
   search(text) {
     const newItems = this.items.filter(item=>RegExp(text, 'i').test(item.title));
-    this.setState({ items: newItems })
+    this.setState({ items: newItems, activeFolder: 'All' })
   }
 
   selectFolder(activeFolder) {
     this.setState({ activeFolder });
+    if(activeFolder == "All"){
+      return this.setState({ items: this.items })
+    }
     const newItems = this.items.filter(item=>(item.folder===activeFolder));
     this.setState({ items: newItems })
   }
@@ -54,10 +58,18 @@ export default class Home extends Component {
   addItem(item, callback) {
     Service.add(item)
     .then((data) => {
-      Service.getItems()
-      .then(this.initItems);
+      Service.getItems().then(this.initItems);
       callback();
     });
+  }
+
+  moveItem(id, item, callback) {
+    Service.update(id, item)
+    .then((data) => {
+      Service.getItems().then((data) =>
+        this.initItems(data, item.folder));
+    });
+
   }
 
   render() {
@@ -80,7 +92,7 @@ export default class Home extends Component {
             />
           </div>
           <div className="col-md-9">
-            <Bookmarks items={this.state.items} />
+            <Bookmarks items={this.state.items} onMoveItem={this.moveItem}/>
           </div>
         </div>
       </div>

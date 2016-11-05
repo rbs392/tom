@@ -10,7 +10,7 @@ export default class Bookmarks extends Component {
           <hr/>
           {
             this.props.items.map((item, id) =>
-              <Item key={id} {...item} />
+              <Item key={id} {...item} onMoveItem={this.props.onMoveItem}/>
             )
           }
         </div>

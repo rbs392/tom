@@ -7,7 +7,7 @@ const spec = {
   },
   canDrop(props, monitor) {
     const item = monitor.getItem();
-    return item.folder !== props.name;
+    return (props.name !== 'All') && (item.folder !== props.name);
   }
 }
 

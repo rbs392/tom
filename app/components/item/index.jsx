@@ -14,7 +14,7 @@ const spec = {
     const newFolder = monitor.getDropResult();
     if(newFolder){
       const { title, url, folder } = Object.assign({}, props, newFolder);
-      Service.update(props._id, { title, url, folder });
+      props.onMoveItem(props._id, { title, url, folder })
     }
   }
 }
