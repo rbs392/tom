@@ -13,10 +13,17 @@ export default class SearchOrAdd extends Component {
     this.state = {
       title: '',
       url: '',
-      folder: 'public',
+      folder: '',
       showAddControl: false,
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.folders[0]) {
+      this.setState({ folder: nextProps.folders[0].name });
+    }
+  }
+
   onKeyDown(event) {
     if(event.keyCode === 13){
       this.setState({ showAddControl: true });
@@ -30,7 +37,7 @@ export default class SearchOrAdd extends Component {
         this.setState({
           title: '',
           url: '',
-          folder: 'public',
+          folder: this.props.folders[0].name,
           showAddControl: false,
         });
       });
@@ -58,7 +65,6 @@ export default class SearchOrAdd extends Component {
 
   render() {
     const folders = this.props.folders.slice();
-    folders.unshift('public');
     return (
       <div className="component-searchoradd clearfix">
         <div className="col-sm-12 form-group">
@@ -89,7 +95,7 @@ export default class SearchOrAdd extends Component {
                   <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     {
                       folders.map((folder, i) =>
-                        <a key={i} className="dropdown-item" onClick={this.setFolder.bind(null, folder)}>{folder}</a>
+                        <a key={i} className="dropdown-item" onClick={this.setFolder.bind(null, folder.name)}>{folder.name}</a>
                       )
                     }
                   </div>

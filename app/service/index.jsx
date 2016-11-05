@@ -10,11 +10,10 @@ class Service {
 
   getFolders() {
     return new Promise((resolve, reject) => {
-      // fetch('/api/folders')
-      // .then(response => response.json())
-      // .then(resolve)
-      // .catch(reject);
-      resolve(['test1', 'test2', 'test3']);
+      fetch('/api/folder')
+      .then(response => response.json())
+      .then(resolve)
+      .catch(reject);
     })
   }
 
@@ -26,6 +25,44 @@ class Service {
         headers: new Headers({
           'Content-Type': 'application/json',
         })
+      })
+      .then(response => response.json())
+      .then(resolve)
+      .catch(reject);
+    })
+  }
+
+
+  deleteItem(id) {
+    return new Promise((resolve, reject) => {
+      fetch(`/api/bookmark/${id}`, {
+        method: 'DELETE',
+      })
+      .then(response => response.json())
+      .then(resolve)
+      .catch(reject);
+    })
+  }
+
+  addFolder(folder) {
+    return new Promise((resolve, reject) => {
+      fetch(`/api/folder`, {
+        method: 'POST',
+        body: JSON.stringify(folder),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      })
+      .then(response => response.json())
+      .then(resolve)
+      .catch(reject);
+    })
+  }
+
+  deleteFolder(id) {
+    return new Promise((resolve, reject) => {
+      fetch(`/api/folder/${id}`, {
+        method: 'DELETE',
       })
       .then(response => response.json())
       .then(resolve)

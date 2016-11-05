@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
+import './style.scss';
 import Service from '../../service';
 import { SearchOrAdd, Folders, Bookmarks } from '../../components';
 
@@ -15,13 +16,16 @@ export default class Home extends Component {
       folders: [],
       activeFolder: 'All',
     }
-    this.items = [];
-    this.search = this.search.bind(this);
-    this.addItem = this.addItem.bind(this);
-    this.moveItem = this.moveItem.bind(this);
-    this.initItems = this.initItems.bind(this);
-    this.initFolders = this.initFolders.bind(this);
-    this.selectFolder = this.selectFolder.bind(this);
+    this.items          = [];
+    this.search         = this.search.bind(this);
+    this.addItem        = this.addItem.bind(this);
+    this.moveItem       = this.moveItem.bind(this);
+    this.initItems      = this.initItems.bind(this);
+    this.onAddFolder    = this.onAddFolder.bind(this);
+    this.initFolders    = this.initFolders.bind(this);
+    this.selectFolder   = this.selectFolder.bind(this);
+    this.onDeleteItem   = this.onDeleteItem.bind(this);
+    this.onDeleteFolder = this.onDeleteFolder.bind(this);
   }
 
   initItems(items, activeFolder=null) {
@@ -63,6 +67,28 @@ export default class Home extends Component {
     });
   }
 
+  onAddFolder(folder, callback) {
+    Service.addFolder(folder)
+    .then((data) => {
+      Service.getFolders().then(this.initFolders);
+      callback();
+    });
+  }
+
+  onDeleteFolder(id) {
+    Service.deleteFolder(id)
+    .then((data) => {
+      Service.getFolders().then(this.initFolders);
+    });
+  }
+
+  onDeleteItem(id) {
+    Service.deleteItem(id)
+    .then((data) => {
+      Service.getItems().then(this.initItems);
+    });
+  }
+
   moveItem(id, item, callback) {
     Service.update(id, item)
     .then((data) => {
@@ -74,25 +100,33 @@ export default class Home extends Component {
 
   render() {
     return (
-      <div className="container">
-        <h1>TOM</h1>
-        <div className="row">
-          <SearchOrAdd
-            onChange={this.search}
-            onEnter={this.addItem}
-            folders={this.state.folders}
-          />
-        </div>
-        <div className="row">
-          <div className="col-md-3">
-            <Folders
-              items={this.state.folders}
-              onClick={this.selectFolder}
-              activeFolder={this.state.activeFolder}
+      <div className="home">
+        <h1 className="title">TOM</h1>
+        <div className="container">
+          <div className="row">
+            <SearchOrAdd
+              onChange={this.search}
+              onEnter={this.addItem}
+              folders={this.state.folders}
             />
           </div>
-          <div className="col-md-9">
-            <Bookmarks items={this.state.items} onMoveItem={this.moveItem}/>
+          <div className="row">
+            <div className="col-md-3">
+              <Folders
+                items={this.state.folders}
+                onClick={this.selectFolder}
+                activeFolder={this.state.activeFolder}
+                onEnter={this.onAddFolder}
+                onDelete={this.onDeleteFolder}
+              />
+            </div>
+            <div className="col-md-9">
+              <Bookmarks
+                items={this.state.items}
+                onMoveItem={this.moveItem}
+                onDeleteItem={this.onDeleteItem}
+              />
+            </div>
           </div>
         </div>
       </div>

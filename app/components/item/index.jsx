@@ -26,11 +26,21 @@ const collect = (connect, monitor) => ({
 
 @DragSource('Items', spec, collect)
 export default class Item extends Component {
+  constructor(props) {
+    super(props);
+    this.onDelete = this.onDelete.bind(this);
+  }
+
+  onDelete() {
+    this.props.onDeleteItem(this.props._id);
+  }
+
   render() {
-    const { connectDragSource, isDragging } = this.props;
+    const { connectDragSource, isDragging, onDeleteItem } = this.props;
     return connectDragSource(
       <div className="component-item" style={{ background: isDragging ? 'rgba(85, 179, 62, 0.35)': 'white'}}>
         <a target="__blank" href={this.props.url}>{this.props.title}</a>
+        <i className="fa fa-trash-o icon" onClick={this.onDelete} />
       </div>
     );
   }

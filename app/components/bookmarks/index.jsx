@@ -8,11 +8,13 @@ export default class Bookmarks extends Component {
         <div className="col-sm">
           <h6>Bookmarks</h6>
           <hr/>
-          {
-            this.props.items.map((item, id) =>
-              <Item key={id} {...item} onMoveItem={this.props.onMoveItem}/>
-            )
-          }
+          <div className="bookmarks-wrapper">
+            {
+              this.props.items.map((item, id) =>
+                <Item key={id} {...item} onMoveItem={this.props.onMoveItem} onDeleteItem={this.props.onDeleteItem}/>
+              )
+            }
+          </div>
         </div>
       </div>
     );
