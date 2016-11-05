@@ -22,7 +22,7 @@ export default class Home extends BaseComponent {
             />
           </div>
           <div className="row">
-            <div className="col-md-3">
+            <div className="hidden-sm-down col-md-4">
               <Folders
                 items={this.state.folders}
                 onClick={this.selectFolder}
@@ -31,7 +31,7 @@ export default class Home extends BaseComponent {
                 onDelete={this.onDeleteFolder}
               />
             </div>
-            <div className="col-md-9">
+            <div className="col-sm-12 col-md-8">
               <Bookmarks
                 items={this.state.items}
                 onMoveItem={this.moveItem}
